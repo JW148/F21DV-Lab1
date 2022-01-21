@@ -1,0 +1,4 @@
+shapeType,dim1,dim2,pos1,pos2,col
+"circle",50,,250,50,"pink"
+"ellipse",150,50,250,50,"green"
+"rect",200,100,0,0,"blue"
