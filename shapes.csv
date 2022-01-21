@@ -2,3 +2,4 @@ shapeType,dim1,dim2,pos1,pos2,col
 "circle",50,,250,500,"pink"
 "ellipse",150,50,250,50,"green"
 "rect",200,100,100,100,"blue"
+"line",430,570,700,800,"orange"
