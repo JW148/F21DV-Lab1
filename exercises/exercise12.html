@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Exercise 12</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+  </head>
+  <body>
+    <script>
+      // link to the csv that hold the data to draw the shapes for the svg scene
+      let csv =
+        "https://raw.githubusercontent.com/JW148/F21DV-Lab1/main/shapes.csv";
+
+      //Create SVG element
+      var svg = d3
+        .select("body")
+        .append("svg")
+        .attr("width", 800)
+        .attr("height", 800)
+        .style("border", "1px solid green");
+
+        //get the data from an external csv using the d3.csv async function
+      d3.csv(csv, function (data) {
+        return data;
+      }).then(function (d) {
+        console.log(d);
+        for (let i = 0; i < d.length; i++) {
+          //switch on the shapeType from the csv to decide what shape to draw on the csv
+          switch (d[i].shapeType) {
+            case "circle":
+              //Create a circle element based off the elements specified parameters
+              console.log("circle appended");
+              svg
+                .append("circle")
+                .attr("cx", d[i].pos1)
+                .attr("cy", d[i].pos2)
+                .attr("r", d[i].dim1)
+                .attr("fill", d[i].col);
+              break;
+            case "ellipse":
+              //Create an ellipse element based off the elements specified parameters
+            console.log("ellipse appended");
+              svg
+                .append("ellipse")
+                .attr("cx", d[i].pos1)
+                .attr("cy", d[i].pos2)
+                .attr("rx", d[i].dim1)
+                .attr("ry", d[i].dim2)
+                .attr("fill", d[i].col);
+              break;
+            case "rect":
+              //Create a rect element based off the elements specified parameters
+              console.log("rect appended");
+              svg
+                .append("rect")
+                .attr("x", d[i].pos1)
+                .attr("y", d[i].pos2)
+                .attr("width", d[i].dim1)
+                .attr("height", d[i].dim2)
+                .attr("fill", d[i].col);
+            case "line":
+              //Create a line element based off the elements specified parameters
+              console.log("line appended");
+              svg
+                .append("line")
+                .attr("x1", d[i].dim1) //dim1 and dim2 are used for the lines x1 and y1 coords
+                .attr("x2", d[i].pos1) //pos1 and pos2 are used for the lines y1 and y2 coords
+                .attr("y1", d[i].dim2) 
+                .attr("y2", d[i].pos2)
+                .attr("stroke", d[i].col);
+                break;
+            default:
+              // if there is no match, then likely the shapes.csv file isn't populated (or populated incorrectly)
+              svg
+                .append("text")
+                .attr("x", 300)
+                .attr("y", 400)
+                .attr("stroke", "#fff")
+                .text("Please populates the shapes.csv file");
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

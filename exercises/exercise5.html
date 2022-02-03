@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Exercise 5</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+  </head>
+  <body>
+    <script>
+      var bodyElement = d3.select("body");
+      var div = bodyElement.append("div");
+      div.text("Hello World!");
+
+      // same as
+
+      //demonstrates how the chain syntax can be used to represent multiple operations at once
+      // that is, append(), text(), style()
+      d3.select("body")
+        .append("div")
+        .text("Hello World!")
+        .style("color", "green");
+    </script>
+  </body>
+</html>

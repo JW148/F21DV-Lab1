@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Exercise 4</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+  </head>
+  <body>
+    <script>
+      //new elements are created in the same way as the previous exercise
+      for (let i = 1; i <= 10; i++) {
+        i <= 5
+          ? d3.select("body").append("div").text(i).style("color", "red")
+          : d3.select("body").append("div").text(i).style("color", "green");
+      }
+
+      //uses select() method to select the first 'div' element and modify its text content and colour
+      d3.select("div").style("color", "purple").text("Start");
+    </script>
+  </body>
+</html>

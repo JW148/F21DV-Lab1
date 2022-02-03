@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Exercise 7</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+  </head>
+  <body>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <script>
+      let num = [10, 50, 100, 200];
+
+      let paragraph = d3
+        .select("body")
+        .selectAll("div")
+        // provides the array values to the selected elements
+        .data(num)
+        // d is the data element, i is the index of the data in the array
+        .text(function (d, i) {
+          return "cont:" + d; // return value is used to set the 'text'
+        })
+        //conditionally styles the text component based on its value
+        .style("color", function (d, i) {
+          //bounds check is changed so the colour is red for numbers between 50 and 100 (inclusive)
+          if (d <= 100 && d >= 50) {
+            return "red";
+          } else {
+            return "yellow";
+          }
+          return "blue";
+        });
+    </script>
+  </body>
+</html>

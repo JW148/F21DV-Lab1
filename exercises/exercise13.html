@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Exercise 13</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+  </head>
+  <body>
+    <script>
+      let csv =
+        "https://raw.githubusercontent.com/JW148/F21DV-Lab1/main/shapes.csv";
+
+      let circles = [];
+      let circlesTemp = [];
+      let rects = [];
+      let rectsTemp = [];
+      let ellipses = [];
+      let ellipsesTemp = [];
+      let lines = [];
+      let linesTemp = [];
+      let circlesIndex = 0;
+      let rectsIndex = 0;
+      let ellipsesIndex = 0;
+      let linesIndex = 0;
+
+      //Create SVG element
+      var svg = d3
+        .select("body")
+        .append("svg")
+        .attr("width", window.innerWidth - 40)
+        .attr("height", 800)
+        .style("border", "1px solid green");
+
+      d3.csv(csv, function (data) {
+        return data;
+      }).then(function (d) {
+        console.log(d);
+        for (let i = 0; i < d.length; i++) {
+          if (d[i].shapeType === "circle") circles.push(d[i]);
+          if (d[i].shapeType === "rect") rects.push(d[i]);
+          if (d[i].shapeType === "ellipse") ellipses.push(d[i]);
+          if (d[i].shapeType === "line") lines.push(d[i]);
+        }
+      });
+
+      function enterCircles() {
+        if (circlesIndex < circles.length) {
+          //check if the index is less than the length of myData (so it doesn't go out of bounds)
+          circlesTemp.push(circles[circlesIndex]); //push the element at the current index from the myData array to the temp array
+          circlesIndex++; //increment the index to push the next element when enter() is called again
+        }
+        svg
+          .selectAll("circle")
+          .data(circlesTemp)
+          .enter()
+          .append("circle")
+          .attr("cx", function (d) {
+            return d.pos1;
+          })
+          .attr("cy", function (d) {
+            return d.pos2;
+          })
+          .attr("r", function (d) {
+            return d.dim1;
+          })
+          .attr("fill", function (d) {
+            return d.col;
+          });
+      }
+      function exitCircles() {
+        if (circlesIndex > 0) {
+          //checks the index to make sure it remains >= 0 (out of bounds otherwise)
+          circlesTemp.pop(); //pops the last element from the temp array
+          circlesIndex--; //decrements the index
+        }
+        svg.selectAll("circle").data(circlesTemp).exit().remove();
+      }
+
+      function enterRects() {
+        if (rectsIndex < rects.length) {
+          //check if the index is less than the length of myData (so it doesn't go out of bounds)
+          rectsTemp.push(rects[rectsIndex]); //push the element at the current index from the myData array to the temp array
+          console.log(rects[rectsIndex]);
+          rectsIndex++; //increment the index to push the next element when enter() is called again
+        }
+        console.log(rectsTemp);
+        svg
+          .selectAll("rect")
+          .data(rectsTemp)
+          .enter()
+          .append("rect")
+          .attr("x", function (d) {
+            return d.pos1;
+          })
+          .attr("y", function (d) {
+            return d.pos2;
+          })
+          .attr("width", function (d) {
+            return d.dim1;
+          })
+          .attr("height", function (d) {
+            return d.dim2;
+          })
+          .attr("fill", function (d) {
+            return d.col;
+          });
+      }
+      function exitRects() {
+        if (rectsIndex > 0) {
+          //checks the index to make sure it remains >= 0 (out of bounds otherwise)
+          rectsTemp.pop(); //pops the last element from the temp array
+          rectsIndex--; //decrements the index
+        }
+        svg.selectAll("rect").data(rectsTemp).exit().remove();
+      }
+
+      function enterEllipses() {
+        if (ellipsesIndex < ellipses.length) {
+          //check if the index is less than the length of myData (so it doesn't go out of bounds)
+          ellipsesTemp.push(ellipses[ellipsesIndex]); //push the element at the current index from the myData array to the temp array
+          ellipsesIndex++; //increment the index to push the next element when enter() is called again
+        }
+        svg
+          .selectAll("ellipse")
+          .data(ellipsesTemp)
+          .enter()
+          .append("ellipse")
+          .attr("cx", function (d) {
+            return d.pos1;
+          })
+          .attr("cy", function (d) {
+            return d.pos2;
+          })
+          .attr("rx", function (d) {
+            return d.dim1;
+          })
+          .attr("ry", function (d) {
+            return d.dim2;
+          })
+          .attr("fill", function (d) {
+            return d.col;
+          });
+      }
+      function exitEllipses() {
+        if (ellipsesIndex > 0) {
+          //checks the index to make sure it remains >= 0 (out of bounds otherwise)
+          ellipsesTemp.pop(); //pops the last element from the temp array
+          ellipsesIndex--; //decrements the index
+        }
+        svg.selectAll("ellipse").data(ellipsesTemp).exit().remove();
+      }
+
+      function enterLines() {
+        if (linesIndex < lines.length) {
+          //check if the index is less than the length of myData (so it doesn't go out of bounds)
+          linesTemp.push(lines[linesIndex]); //push the element at the current index from the myData array to the temp array
+          linesIndex++; //increment the index to push the next element when enter() is called again
+        }
+        console.log(linesTemp);
+        svg
+          .selectAll("line")
+          .data(linesTemp)
+          .enter()
+          .append("line")
+          .attr("x1", function (d) {
+            console.log(d.pos1);
+            return d.pos1;
+          })
+          .attr("x2", function (d) {
+            return d.pos2;
+          })
+          .attr("y1", function (d) {
+            return d.dim1;
+          })
+          .attr("y2", function (d) {
+            return d.dim2;
+          })
+          .style("stroke-width", 5)
+          .style("stroke", function (d) {
+            return d.col;
+          });
+      }
+      function exitLines() {
+        if (linesIndex > 0) {
+          //checks the index to make sure it remains >= 0 (out of bounds otherwise)
+          linesTemp.pop(); //pops the last element from the temp array
+          linesIndex--; //decrements the index
+        }
+        svg.selectAll("line").data(linesTemp).exit().remove();
+      }
+    </script>
+    <button type="button" onclick="enterCircles()">Enter Circles</button>
+    <button type="button" onclick="exitCircles()">Exit Circles</button>
+    <button type="button" onclick="enterRects()">Enter Rects</button>
+    <button type="button" onclick="exitRects()">Exit Rects</button>
+    <button type="button" onclick="enterEllipses()">Enter Ellipses</button>
+    <button type="button" onclick="exitEllipses()">Exit Ellipses</button>
+    <button type="button" onclick="enterLines()">Enter Lines</button>
+    <button type="button" onclick="exitLines()">Exit Lines</button>
+  </body>
+</html>

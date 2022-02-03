@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Exercise 21</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+  </head>
+
+  <body>
+    <script>
+      d3.csv(
+        "https://raw.githubusercontent.com/JW148/F21DV-Lab1/main/Exercise17.csv",
+        function (d) {
+          return d;
+        }
+      ).then(function (data) {
+        let values = [];
+        //get the values from the csv file, convert them to ints (from strings), and then append them to the values array
+        for (let i = 0; i < data.length; i++) {
+          values.push(parseInt(data[i].data));
+        }
+
+        const width = 500;
+        const barHeight = 20;
+        const margin = 3;
+
+        // sets the graph scale. Maps values from the 0 to the max value in values array to values in the range of 0 to the width of the svg.
+        var scale = d3
+          .scaleLinear()
+          .domain([0, d3.max(values)])
+          .range([0, width]);
+
+        //make the svg
+        var svg = d3
+          .select("body")
+          .append("svg")
+          .attr("width", width + 40)
+          .attr("height", barHeight * values.length + 30);
+
+        var g = svg
+          .selectAll("g")
+          .data(values)
+          .enter()
+          .append("g")
+          .attr("transform", function (d, i) {
+            return "translate(0," + i * barHeight + ")";
+          });
+
+        g.append("rect")
+          .attr("width", function (d) {
+            return scale(d);
+          })
+          .attr("fill", function (d) {
+            if (d < 100) return "green";
+            if (d > 500) return "red";
+            return "blue";
+          })
+          .attr("transform", "translate(" + (margin + 20) + "," + 0 + ")")
+          .attr("height", barHeight - margin);
+
+        g.append("text")
+          .attr("x", function (d) {
+            return scale(d);
+          })
+          .attr("y", barHeight / 2)
+          .attr("dy", ".35em")
+          .attr("transform", "translate(" + (margin + 20) + "," + 0 + ")")
+          .style("text-anchor", "end")
+          .text(function (d) {
+            return d;
+          });
+
+        // Add scales to axis
+        var x_axis = d3.axisBottom().scale(scale);
+
+        //Append group and insert axis
+        svg
+          .append("g")
+          .attr(
+            "transform",
+            "translate(" +
+              (margin + 20) +
+              "," +
+              (values.length * barHeight + 10) +
+              ")"
+          )
+          .call(x_axis);
+
+        //elements used for y axis lables
+        var labels = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"];
+
+        //set scale for y axis
+        //uses scaleBand() instead of scaleLinear like the x axis uses
+        var y_scale = d3
+          .scaleBand()
+          .domain(labels.slice(0, values.length)) //uses slice so the correct number of labels are used (based off the amount of elements in the values array)
+          .range([barHeight * values.length, 0]);
+
+        var y_axis = d3.axisLeft().scale(y_scale);
+
+        //Append group and insert axis
+        svg
+          .append("g")
+          .attr("transform", "translate(" + (margin + 15) + "," + 0 + ")")
+          .call(y_axis);
+      });
+    </script>
+  </body>
+</html>

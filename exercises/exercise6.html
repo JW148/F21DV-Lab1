@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Exercise 6</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+  </head>
+  <body>
+    <div></div>
+    <div></div>
+    <div></div>
+    <script>
+      //added additional 'colour' variable to the object array
+      let otherdata = [
+        { name: "test", val: 1, colour: "red" },
+        { name: "other", val: 2, colour: "green" },
+        { name: "b", val: 3, colour: "blue" },
+      ];
+
+      let paragraph = d3
+        .select("body")
+        .selectAll("div")
+        //the data() method provides the array elements to the selected elements
+        .data(otherdata)
+        //d3 methods can take functions as arguments
+        .text(function (d, i) {
+          //element properties from the objects array are accessed using 'dot' notation
+          console.log("d.name: " + d.name);
+          console.log("d.val:  " + d.val);
+          console.log("d.colour:  " + d.colour);
+          console.log("i: " + i);
+          console.log("this: " + this);
+
+          return "cont: " + d.name + "," + " colour: " + d.colour + "," + " val: " + d.val; // return value is used to set the 'text'
+        })
+        //set the colour of the text to the additional colour variable
+        .style('color', function(d){
+          return d.colour;
+        });
+    </script>
+  </body>
+</html>

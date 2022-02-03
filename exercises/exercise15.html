@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Exercise 15</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+      svg rect {
+        fill: blue;
+      }
+
+      svg text {
+        fill: white;
+        font: 10px sans-serif;
+        text-anchor: end;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      let heartfailurecsv =
+        "https://raw.githubusercontent.com/akmand/datasets/master/heart_failure.csv";
+
+      d3.csv(heartfailurecsv, function (data) {
+        return data;
+      }).then(function (data) {
+        // process the data to count the number of instances within each age range and store them in the counts array
+        let counts = [];
+        // uses filter() with and anonymous function to filter the instances from the counts array then calls .length
+        // to count these instances and pushes them to counts array
+        counts.push(data.filter((x) => x.age <= 30).length);
+        counts.push(data.filter((x) => x.age >= 31 && x.age <= 40).length);
+        counts.push(data.filter((x) => x.age >= 41 && x.age <= 60).length);
+        counts.push(data.filter((x) => x.age >= 61 && x.age <= 100).length);
+
+        // labels to display the age range counts
+        let rangeLabels = ["1-30: ", "31-40: ", "41-60: ", "61-100: "];
+
+        // draw the bar chart
+        var width = 1000;
+        var scaleFactor = 5;
+        var barHeight = 40;
+
+        //create the svg window
+        var graph = d3
+          .select("body")
+          .append("svg")
+          .attr("width", width)
+          .attr("height", barHeight * counts.length);
+
+        //append range labels to the left of the graph
+        graph
+          .selectAll("g")
+          .data(rangeLabels)
+          .enter()
+          .append("text")
+          .text(function (d) {
+            return d;
+          })
+          .style("fill", "black")
+          .attr("x", 40)
+          .attr("y", function (d, i) {
+            return i * 40 + 20;
+          });
+
+        //appends an svg group element (g) for every element in the array
+        var bar = graph
+          .selectAll("g")
+          .data(counts)
+          .enter()
+          .append("g")
+          .attr("transform", function (d, i) {
+            return "translate(50," + i * barHeight + ")"; //translated by 50 on the x axis and the y axis is translated by the current index * barHeight
+          });
+
+        //draw the rect
+        bar
+          .append("rect")
+          .attr("width", function (d) {
+            return d * scaleFactor;
+          })
+          .attr("height", barHeight - 1)
+          .style("fill", function (d) {
+            //conditionally colour the rect based on the data value
+            if (d < 100) return "green";
+            if (d < 150) return "orange";
+            else return "red";
+          });
+
+        //append the count to the bar
+        bar
+          .append("text")
+          .attr("x", function (d) {
+            return d * scaleFactor - 5;
+          })
+          .attr("y", barHeight / 2)
+          .attr("dy", ".35em")
+          .text(function (d) {
+            return d;
+          });
+      });
+    </script>
+  </body>
+</html>

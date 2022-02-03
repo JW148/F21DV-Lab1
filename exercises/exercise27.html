@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Exercise 27</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+  </head>
+  <body>
+    <script>
+      // Set Dimensions
+      const xSize = 600;
+      const ySize = 600;
+      const margin = 40;
+      const xMax = xSize - margin * 2;
+      const yMax = ySize - margin * 2;
+
+      // Create Random Points
+      const numPoints = 100;
+      const data = [];
+      for (let i = 0; i < numPoints; i++) {
+        data.push({
+          x: i / 100,
+          y: Math.sin((6.2 * i) / 100),
+        });
+      }
+
+      const data2 = [];
+      for (let i = 0; i < numPoints; i++) {
+        data2.push({
+          x: i / 100,
+          y: Math.cos((6.2 * i) / 100),
+        });
+      }
+
+      // Get the 'limits' of the data - the full extent (mins and max)
+      // so the plotted data fits perfectly
+      const xExtent = d3.extent(data, (d) => {
+        return d.x;
+      });
+      const yExtent = d3.extent(data, (d) => {
+        return d.y;
+      });
+
+      // Append SVG Object to the Page
+      const svg = d3
+        .select("body")
+        .append("svg")
+        .attr("width", xSize)
+        .attr("height", ySize)
+        .append("g")
+        .attr("transform", "translate(" + margin + "," + margin + ")");
+
+      // X Axis
+      const x = d3
+        .scaleLinear()
+        .domain([xExtent[0], xExtent[1]])
+        .range([0, xMax]);
+
+      // Y Axis
+      const y = d3
+        .scaleLinear()
+        .domain([yExtent[0], yExtent[1]])
+        .range([yMax, 0]);
+
+      //text is appended to the line plot here
+      // had to add text annotations here because it wasn't seeing all the data (e.g. only appending text for x values > 0.4)
+      svg
+        .selectAll("text")
+        .data(data)
+        .enter()
+        // maybe inlude function here also so that text elements are only appended for every fifth element in the array
+        //currently there is on text elemented for every element in the array but only every fifth element is being displayed.
+        .append("text")
+        .attr("x", function (d) {
+          return x(d.x);
+        })
+        .attr("y", function (d) {
+          return y(d.y);
+        })
+        // appends coordinate annotation to evry fifth element. uses substring() method to tidy things up a bit
+        .text(function (d, i) {
+          if (i % 5 === 0)
+            return (
+              d.x.toString().substring(0, 3) + //converts the int to string so that subString() method can be used to shorten it (looks a bit messy otherwise)
+              " " +
+              d.y.toString().substring(0, 3)
+            );
+        });
+
+      // bottom
+      svg
+        .append("g")
+        .attr("transform", "translate(0," + yMax + ")")
+        .call(d3.axisBottom(x))
+        .attr("color", "green"); // make bottom axis green
+
+      // top
+      svg.append("g").call(d3.axisTop(x));
+
+      // left y axis
+      svg.append("g").call(d3.axisLeft(y));
+
+      // right y axis
+      svg
+        .append("g")
+        .attr("transform", `translate(${yMax},0)`)
+        .call(d3.axisRight(y));
+
+      function drawLine(data, colour, shape) {
+        // Add the line
+        svg
+          .append("path")
+          .datum(data)
+          .attr("fill", "none")
+          .attr("stroke", colour)
+          .attr("stroke-width", 1.5)
+          .attr(
+            "d",
+            d3
+              .line()
+              .x(function (d) {
+                return x(d.x);
+              })
+              .y(function (d) {
+                return y(d.y);
+              })
+          );
+
+        if (shape === "circle") {
+          svg
+            .selectAll("dot")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("cx", function (d) {
+              return x(d.x);
+            })
+            .attr("cy", function (d) {
+              return y(d.y);
+            })
+            .attr("r", 5)
+            .style("fill", "red");
+        }
+
+        if (shape === "triangle") {
+          svg
+            .selectAll("dot")
+            .data(data)
+            .enter()
+            // https://stackoverflow.com/questions/32831489/idiomatic-way-of-drawing-a-triangle-in-d3
+            .append("path")
+            .attr("transform", function (d) {
+              return "translate(" + x(d.x) + "," + y(d.y) + ")";
+            })
+            .attr("d", d3.symbol().type(d3.symbolTriangle));
+        }
+      }
+
+      drawLine(data, "steelblue", "circle");
+      drawLine(data2, "green", "triangle");
+    </script>
+  </body>
+</html>

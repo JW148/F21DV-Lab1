@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Exercise 9</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+  </head>
+
+  <body>
+    <script>
+      let titaniccsv =
+        "https://raw.githubusercontent.com/dsindy/kaggle-titanic/master/data/test.csv";
+      /* 
+  PassengerId,Pclass,Name,Sex,Age,SibSp,Parch,Ticket,Fare,Cabin,Embarked 
+  892,3,"Kelly, Mr. James",male,34.5,0,0,330911,7.8292,,Q 
+  893,3,"Wilkes, Mrs. James (Ellen Needs)",female,47,1,0,363272,7,,S 
+  894,2,"Myles, Mr. Thomas Francis",male,62,0,0,240276,9.6875,,Q 
+  895,3,"Wirz, Mr. Albert",male,27,0,0,315154,8.6625,,S 
+  */
+
+      // was having a problem with the async callback of .csv() function
+      // so if the mr and mrs counts were updated inside the callback and then outside
+      // of the csv(). function they were printed, they would print 0 because these print
+      // statement lines had been exectued before the data was loaded
+      // so now, using then (because async tasks return a promise objects)
+      // the data is loaded before anything is updated
+
+      d3.csv(titaniccsv, function (d) {
+        return d;
+      }).then(function (data) {
+        //vars to hold the counts of different elements
+        let mr = 0;
+        let mrs = 0;
+        let male = 0;
+        let female = 0;
+        //an array to hold all the counts
+        let counts = [];
+        //sort the csv data to count the different types
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].Name.includes("Mr.")) mr++;
+          if (data[i].Name.includes("Mrs.")) mrs++;
+          if (data[i].Sex === "male") male++;
+          if (data[i].Sex === "female") female++;
+        }
+        //push all the counts to the array with identifier text appended
+        counts.push(
+          "Mr: " + mr,
+          "Mrs: " + mrs,
+          "Male: " + male,
+          "Female: " + female
+        );
+        //log data to the console for easy debugging
+        console.log(counts);
+        console.log("Mr: " + mr);
+        console.log("Mrs: " + mrs);
+        console.log("Male: " + male);
+        console.log("Female: " + female);
+        // makes new p elements with the processed data to print on the page
+        d3.select("body")
+          .selectAll("p")
+          .data(counts)
+          .enter()
+          .append("p")
+          .text(function (d) {
+            return d;
+          });
+
+        //a note about the possible discrepency in the data
+        let text = `**total number of instances in the data set is 418,
+                    so it is  possible that there are some instances that aren't classified
+                    as Mr or Mrs (some could be Miss or Master for example)`;
+
+        d3.select("body").append("p").text(text);
+      });
+    </script>
+  </body>
+</html>

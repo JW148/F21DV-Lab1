@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Exercise 19</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+      svg g rect {
+        margin: 50px;
+      }
+      svg {
+        margin-right: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      //the bar graph code from the previous exercise is placed inside the showGraph() function which takes a csv as an argument
+      //when the function is called, the data is loaded from the specified csv parameter and the graph is made the same way as
+      //the previous exercise. calling the function multiple times will make multiple svg's with multiple graph's
+      function showGraph(csv) {
+        d3.csv(csv, function (d) {
+          return d;
+        }).then(function (data) {
+          let values = [];
+          //get the values from the csv file, convert them to ints (from strings), and then append them to the values array
+          for (let i = 0; i < data.length; i++) {
+            values.push(parseInt(data[i].data));
+          }
+
+          const width = 500;
+          const barHeight = 20;
+          const margin = 1;
+
+          var scale = d3
+            .scaleLinear()
+            .domain([d3.min(values), d3.max(values)])
+            .range([50, 500]);
+
+          var svg = d3
+            .select("body")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", barHeight * values.length);
+
+          var g = svg
+            .selectAll("g")
+            .data(values)
+            .enter()
+            .append("g")
+            .attr("transform", function (d, i) {
+              return "translate(0," + i * barHeight + ")";
+            });
+
+          g.append("rect")
+            .attr("width", function (d) {
+              return scale(d);
+            })
+            .attr("fill", function (d) {
+              if (d < 100) return "green";
+              if (d > 500) return "red";
+              return "blue";
+            })
+            .attr("height", barHeight - margin)
+            .style("padding", "50px");
+
+          g.append("text")
+            .attr("x", function (d) {
+              return scale(d);
+            })
+            .attr("y", barHeight / 2)
+            .attr("dy", ".35em")
+            .style("text-anchor", "end")
+            .text(function (d) {
+              return d;
+            });
+        });
+      }
+
+      showGraph(
+        "https://raw.githubusercontent.com/JW148/F21DV-Lab1/main/Exercise19b.csv"
+      );
+      showGraph(
+        "https://raw.githubusercontent.com/JW148/F21DV-Lab1/main/Exercise17.csv"
+      );
+    </script>
+  </body>
+</html>

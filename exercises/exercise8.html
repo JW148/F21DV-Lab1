@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Exercise 8</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+  </head>
+  <body>
+    <button type="button" onclick="enter()">Enter</button>
+    <button type="button" onclick="exit()">Exit</button>
+    <script>
+      //stores the actual data to be used (not updated)
+      let myData = ["a", 4, 1, "b", 6, 2, 8, 9, "z"];
+      //stores the temporary data to be rendered (is updated)
+      let temp = [];
+      //keeps track of an index which is used to push elements from the myData array to the temp array
+      let index = 0;
+
+      function enter() {
+        if (index < myData.length) {
+          //check if the index is less than the length of myData (so it doesn't go out of bounds)
+          temp.push(myData[index]); //push the element at the current index from the myData array to the temp array
+          index++; //increment the index to push the next element when enter() is called again
+        }
+        console.log(temp); //for debugging
+
+        d3.select("body")
+          .selectAll("p") //selects the p objects for the data to be binded to (non exist to begin with)
+          .data(temp) //the temp array is passed to the data() function so that it can be binded to the selected elements
+          .enter() //because no p elements currently exist, enter() will create new p objects for every element in the data array
+          .append("p")
+          .text(function (d) {
+            return d; //get the element from the data array and set it as the text
+          })
+          .style("color", function (d, i) {
+            if (typeof d === "number") {
+              //conditionally style the element depending on whether it is a number or char
+              return "green";
+            } else {
+              return "blue";
+            }
+          });
+      }
+
+      function exit() {
+        if (index > 0) {
+          //checks the index to make sure it remains >= 0 (out of bounds otherwise)
+          temp.pop(); //pops the last element from the temp array
+          index--; //decrements the index
+        }
+        console.log(temp);
+
+        //since the temp array has now been updated, there are more p elements than there are elements in the temp array...
+        d3.select("body")
+          .selectAll("p")
+          .data(temp)
+          .exit() //...because there is now one less element in the temp array, the last appended p element is passed to the exit() function
+          .remove(); //this element is then removed from the DOM
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <script src='https://d3js.org/d3.v7.min.js'></script> 
+</head> 
+<body> 
+ 
+<script> 
+    // write your d3 code here..  
+ 
+   // prints: "d3.version:", "7.3.0"
+   console.log('d3.version:', d3.version);
+
+   let d3Version = 'd3.version: ' + d3.version;
+
+   //create a new p element and append it to the body using d3
+   d3.select("body")
+    .append("p")
+    .text(d3Version);
+</script> 
+</body> 
+</html> 
