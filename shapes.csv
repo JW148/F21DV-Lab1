@@ -1,0 +1,7 @@
+shapeType,dim1,dim2,pos1,pos2,col
+"circle",100,,400,400,"pink"
+"ellipse",150,50,650,400,"green"
+"ellipse",50,150,400,450,"green"
+"rect",400,800,0,0,"lightblue"
+"rect",400,800,400,0,"blue"
+"line",100,100,700,100,"pink"
