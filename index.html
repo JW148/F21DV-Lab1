@@ -206,7 +206,7 @@
     })
     .attr("onmousedown", function (d, i) {
       //adds an onmousedown event to the a element
-      return `openHTML(event, "./exercises/Exercise${i + 1}.html")`; //when the event occurs (a mouse button is pressed on it) then the open html function
+      return `openHTML(event, "./exercises/exercise${i + 1}.html")`; //when the event occurs (a mouse button is pressed on it) then the open html function
     }) //is called with the mouse event and a link to the corresponding exercise's html page
     .append("rect")
     .attr("x", width / 2 - 90)
