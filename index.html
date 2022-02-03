@@ -1,0 +1,249 @@
+<script src="https://d3js.org/d3.v7.min.js"></script>
+
+<style>
+  text:hover {
+    cursor: pointer;
+  }
+
+  h1,
+  p {
+    font-family: "Arial";
+    margin-bottom: 5px;
+    margin-top: 0px;
+    text-align: center;
+  }
+</style>
+
+<body oncontextmenu="return false">
+  <h1 style="text-align: center">Lab 1: Basics</h1>
+  <p>Data Visualization and Analytics</p>
+</body>
+
+<script>
+  // this data is used to show the different sections (what exercises in each section and such)
+  const sections = [
+    {
+      section: "Part 1: D3 Setup",
+      exercises: [1, 2, 3, 4, 5],
+      links: [],
+    },
+    {
+      section: "Part 2: Data",
+      exercises: [6, 7],
+      links: [],
+    },
+    {
+      section: "Part 3: Data Binding",
+      exercises: [8],
+      links: [],
+    },
+    {
+      section: "Part 4: Loading Data",
+      exercises: [9, 10],
+      links: [],
+    },
+    {
+      section: "Part 5: SVG",
+      exercises: [11, 12, 13],
+      links: [],
+    },
+    {
+      section: "Part 6: Bar Chart",
+      exercises: [14, 15],
+      links: [],
+    },
+    {
+      section: "Part 7: Circle Chart",
+      exercises: [16],
+      links: [],
+    },
+    {
+      section: "Part 8: Scales, Domain, Range",
+      exercises: [17, 18, 19],
+      links: [],
+    },
+    {
+      section: "Part 9: Axis",
+      exercises: [20, 21],
+      links: [],
+    },
+    {
+      section: "Part 10: Line Chart",
+      exercises: [22, 23, 24],
+      links: [],
+    },
+    {
+      section: "Part 11: Markers",
+      exercises: [25, 26, 27],
+      links: [],
+    },
+    {
+      section: "Part 12: Colours",
+      exercises: [28, 29],
+      links: [],
+    },
+    {
+      section: "Part 13: Pie Chart",
+      exercises: [30, 31],
+      links: [],
+    },
+    {
+      section: "Part 14: SVG Graphics",
+      exercises: [32],
+      links: [],
+    },
+  ];
+
+  // links to all the exercises on jsfiddle
+  const exercises = [
+    "https://jsfiddle.net/smcupg7d/",
+    "https://jsfiddle.net/jw148/6d9jupns/1/",
+    "https://jsfiddle.net/jw148/6d9jupns/2/",
+    "https://jsfiddle.net/jw148/6d9jupns/3/",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+  ];
+
+  // sets the svg width to the current browser width and the height is a static value
+  var width = window.innerWidth;
+  var height = 1920;
+
+  //used to set a different colour for each section's rect
+  let dom = d3.range(14);
+  let color = d3.scaleOrdinal().domain(dom).range(d3.schemeSet3);
+  var myColor1 = d3
+    .scaleLinear()
+    .domain([0, 14])
+    .range(["lightseagreen", "lightslategrey"]);
+  var myColor2 = d3
+    .scaleSequential()
+    .domain(dom)
+    .interpolator(d3.interpolatePuRd);
+  var myColor4 = d3
+    .scaleOrdinal()
+    .domain(dom)
+    .range(["lightgrey", "gainsboro"]);
+
+  //append the svg to the body
+  var svg = d3
+    .select("body")
+    .append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+  //draws the rects for each section
+  svg
+    .selectAll("g")
+    .data(sections)
+    .enter()
+    .append("rect")
+    .attr("width", width)
+    .attr("height", function (d) {
+      return d.exercises.length * 60;
+    })
+    .attr("y", function (d) {
+      return (d.exercises[0] - 1) * 60;
+    })
+    .style("fill", function (d, i) {
+      return myColor4(i);
+    });
+
+  // draws the description text of each section
+  svg
+    .selectAll("g")
+    .data(sections)
+    .enter()
+    .append("text")
+    .attr("x", width / 5)
+    .attr("y", function (d) {
+      return (d.exercises[0] - 1) * 60 + (d.exercises.length * 60) / 2;
+    })
+    .style("fill", "black")
+    .style("font-size", "18px")
+    .style("font-family", "Arial")
+    .attr("dy", ".35em")
+    .attr("text-anchor", "middle")
+    .style("pointer-events", "none")
+    .text(function (d) {
+      return d.section;
+    });
+
+  //draw rects for 'buttons'. first appends an <a> element and then a <rect> so that the <rect> object behaves like a button
+  //when it's clicked
+  svg
+    .selectAll("g")
+    .data(exercises)
+    .enter()
+    .append("a")
+    .attr("xlink:href", function (d) {
+      return d;
+    })
+    .attr("onmousedown", function (d, i) {
+      //adds an onmousedown event to the a element
+      return `openHTML(event, "./exercises/Exercise${i + 1}.html")`; //when the event occurs (a mouse button is pressed on it) then the open html function
+    }) //is called with the mouse event and a link to the corresponding exercise's html page
+    .append("rect")
+    .attr("x", width / 2 - 90)
+    .attr("y", function (d, i) {
+      return i * 60 + 10;
+    })
+    .attr("height", 40)
+    .attr("width", 150)
+    .style("fill", "floralwhite")
+    .attr("rx", 5)
+    .attr("ry", 5);
+
+  // draw the text for the buttons
+  svg
+    .selectAll("g")
+    .data(exercises)
+    .enter()
+    .append("text")
+    .attr("x", width / 2 - 10)
+    .attr("y", function (d, i) {
+      return i * 60 + 30;
+    })
+    .style("fill", "black")
+    .style("font-size", "15px")
+    .style("font-family", "Arial")
+    .attr("dy", ".35em")
+    .attr("text-anchor", "middle")
+    .style("pointer-events", "none")
+    .text(function (d, i) {
+      return "Exercise " + (i + 1);
+    });
+
+  function openHTML(event, exercise) {
+    if (event.button === 2) {
+      //checks to see if the mouse event is a right click (2)
+      console.log(exercise);
+      window.open(exercise); //if it is, then open the exercise's html page (left click still naviates to the jsfiddle page)
+    }
+  }
+</script>
